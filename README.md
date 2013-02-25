@@ -215,6 +215,22 @@ type = "apple"
 apple = "yes"
 ```
 
+Validate a toml file
+----------
+
+A TOML file could be validated with anoter file called TOLS.
+
+TOLS should be a simple tool in order to:
+
+1. validate a toml file.
+
+2. add default value to a toml file.
+
+3. create from scratch a skeleton toml file.
+
+For more specification see [tols.md](tols.md)
+
+
 Seriously?
 ----------
 

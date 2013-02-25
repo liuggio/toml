@@ -1,0 +1,166 @@
+## Objective are to give the possibility to:
+## 1. validate a toml file
+## 2. set default value
+## 3. create a new toml file
+
+## minimal, not verbose
+
+# the primitives are:
+#     String, Integer, Float, Boolean, Datetime, Array.
+#     keygroup, key
+
+# Boolean example
+[keyname]
+    [scheme]
+    type = Boolean             # typing
+    default = true             # the default value for the current key
+#    required = false          # default is false
+
+# Integer or Float example < Boolean
+[keyname]
+    [scheme]
+    type = Integer              # typing
+    default = 190               # the default value for the current key
+    required = false            # default is false
+    range.min = 0               # (exclusive <)
+    range.max = 0               # (exclusive >)
+
+# Datetime < Integer
+[keyname]
+    [scheme]
+    type = Datetime              # typing
+    required = true            # default is false
+    range.min = 1979-05-27T07:32:00Z    # (exclusive <)
+    range.max = 1981-05-27T07:32:00Z    # (exclusive >)
+
+# String example < Boolean
+[keyname]
+    [scheme]
+    type = String               # typing
+    required = true             # default is false
+#    default = "Liuggio"        # the default value for the current key
+    lenght.max = 254            # max string lenght (exclusive <)
+    lenght.min = 15             # min lenght (exclusive >)
+    pattern= "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$"   #regular expression
+    valid = ['Github', 'Terravision']
+    invalid = []
+
+# Array example < String
+[keyname]
+    [scheme]
+    type = Array                # typing
+    content = Array
+#    required = true            # default is false
+    default = [1, 2]            # the default value for the current key
+    lenght.max = 2            # max string lenght (exclusive <)
+    lenght.min = 0             # min lenght (exclusive >)
+
+# how to validate this? data = [ ["gamma", "delta"], [1, 2] ]
+[data]
+    [scheme]
+    type = Array                # typing
+    content = Array            # the content type
+    required = true            # default is false
+    lenght.max = 2            # max string lenght (exclusive <)
+    lenght.min = 0             # min lenght (exclusive >)
+
+    [0.scheme]
+    type = Array                # typing
+    lenght.max = 2            # max string lenght (exclusive <)
+    lenght.min = 0             # min lenght (exclusive >)
+    # each key should be:
+    item.type = String
+    item.valid = ['gamma', 'delta']
+    item.pattern = /?/          # regular expr.
+        [0.scheme]                  # the first should be gamma.
+        type = String               # typing
+        required = true             # default is false
+        valid = ['gamma']          #`or just put the regular that validate the string gamma
+
+    [1.scheme]
+    type = Array                # typing
+    lenght.max = 2            # max string lenght (exclusive <)
+    lenght.min = 0             # min lenght (exclusive >)
+    # each key should be:
+    key.type = Integer
+    key.range.min = 0
+
+
+
+
+
+
+
+
+# title = "TOML Example"
+[title.scheme]
+    required = true             # required, default is false
+    maxlenght = 254                     # max string lenght
+
+[owner]
+    [scheme]
+    type = "group"
+
+    [validation]
+    type = "key"
+    default = null
+    required = true
+
+    [name]
+    type = "String"
+
+    [dob]
+
+
+
+name = "Tom Preston-Werner"
+organization = "GitHub"
+bio = "GitHub Cofounder & CEO\nLikes tater tots and beer."
+dob = 1979-05-27T07:32:00Z # First class dates? Why not?
+
+[database]
+server = "192.168.1.1"
+ports = [ 8001, 8001, 8002 ]
+connection_max = 5000
+enabled = true
+
+[servers]
+
+  # You can indent as you please. Tabs or spaces. TOML don't care.
+  [servers.alpha]
+  ip = "10.0.0.1"
+  dc = "eqdc10"
+
+  [servers.beta]
+  ip = "10.0.0.2"
+  dc = "eqdc10"
+
+[clients]
+data = [ ["gamma", "delta"], [1, 2] ] # just an update to make sure parsers support it
+
+
+
+
+Primitives:
+String, Integer, Float, Boolean, Datetime, Array.
+
+group
+
+keygroup
+
+
+[name]
+type = "String"
+default = "Tom Preston-Werner"
+
+[organization]
+type = ["String", "Integer"]
+default = null
+required = true
+
+    [validation]
+    minlen = 0
+    maxlen = 0
+    valid = ['Github', 'Terravision']
+    invalid = []
+
